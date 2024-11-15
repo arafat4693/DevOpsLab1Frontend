@@ -53,7 +53,7 @@ export default function RegisterDoctor() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
     try {
-      const response = await api.post('/auth/signup', {
+      const response = await api.post('/auth/signup/doctor', {
         email: values.email,
         password: values.password,
         name: values.name,
