@@ -1,5 +1,7 @@
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
+import RegisterDoctor from '@/pages/RegisterDoctor';
+import RegisterStaff from '@/pages/RegisterStaff';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import Layout from './components/Layout';
@@ -18,6 +20,8 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/register/staff" element={<RegisterStaff />} />
+            <Route path="/register/doctor" element={<RegisterDoctor />} />
             <Route element={<PrivateRoute />}>
               <Route
                 path="/patient-messaging"

@@ -34,12 +34,9 @@ const formSchema = z.object({
     .string()
     .min(4, { message: 'Must be 4 or more characters long' })
     .max(15, { message: 'Must be 15 or fewer characters long' }),
-  sosialSecurityNumber: z
-    .string()
-    .regex(/^\d{8}-\d{4}$/, { message: 'Must be in the format 12345678-1234' }), // Updated validation
 });
 
-export default function Register() {
+export default function RegisterDoctor() {
   const navigate = useNavigate();
   const auth = useAuth();
   const isLoggedIn = auth.userIsAuthenticated();
@@ -50,7 +47,6 @@ export default function Register() {
       email: '',
       password: '',
       name: '',
-      sosialSecurityNumber: '',
     },
   });
 
@@ -61,7 +57,6 @@ export default function Register() {
         email: values.email,
         password: values.password,
         name: values.name,
-        sosialSecurityNumber: values.sosialSecurityNumber,
       });
       toast(response.data);
       navigate('/login', { replace: true });
@@ -96,24 +91,6 @@ export default function Register() {
                     <FormLabel>Name</FormLabel>
                     <FormControl>
                       <Input {...field} type="text" placeholder="John Doe" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="sosialSecurityNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>SosialSecurityNumber</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        type="text"
-                        placeholder="12345678-1234"
-                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
