@@ -1,4 +1,5 @@
 export interface CurrentUser {
+  id: number;
   email: string;
   name: string;
   role: string;
@@ -11,4 +12,18 @@ export interface IAuthContext {
   userIsAuthenticated: () => boolean;
   userLogin: (user: CurrentUser) => void;
   userLogout: () => void;
+}
+
+export interface IMessageResponse {
+  senderId: number;
+  senderName: string;
+  recipientId: number;
+  message: string;
+  timestamp: Date;
+}
+
+export interface IRecipientResponse {
+  id: number;
+  name: string;
+  role: string;
 }

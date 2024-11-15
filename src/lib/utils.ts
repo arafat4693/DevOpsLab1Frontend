@@ -13,8 +13,9 @@ const api = axios.create({
 
 // Lägg till token i Authorization-headern
 api.interceptors.request.use((config) => {
-  const user = localStorage.getItem('user') as unknown as CurrentUser;
-  if (user) {
+  const storedUser = localStorage.getItem('user');
+  if (storedUser) {
+    const user = JSON.parse(storedUser) as CurrentUser;
     config.headers['Authorization'] = `Bearer ${user.token}`;
   }
   return config;

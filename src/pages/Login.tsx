@@ -54,9 +54,9 @@ export default function Login() {
         password: values.password,
       });
 
-      const { email, name, role, token } = response.data;
+      const { id, email, name, role, token } = response.data;
 
-      const authenticatedUser: CurrentUser = { email, name, role, token };
+      const authenticatedUser: CurrentUser = { id, email, name, role, token };
 
       auth.userLogin(authenticatedUser);
 
