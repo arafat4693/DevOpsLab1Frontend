@@ -11,6 +11,7 @@ import StaffMessaging from '@/pages/StaffMessaging';
 import { Toaster } from '@/components/ui/sonner';
 import AuthProvider from './context/AuthProvider';
 import PrivateRoute from '@/components/PrivateRoute';
+import { UserSearch } from 'lucide-react';
 
 function App() {
   return (
@@ -24,6 +25,14 @@ function App() {
             <Route path="/register/doctor" element={<RegisterDoctor />} />
             <Route element={<PrivateRoute />}>
               <Route
+                path="/Patients"
+                element={
+                  <Layout>
+                    <UserSearch />
+                  </Layout>
+                }
+              />
+              <Route
                 path="/patient-messaging"
                 element={
                   <Layout>
@@ -36,6 +45,14 @@ function App() {
                 element={
                   <Layout>
                     <StaffMessaging />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/:id"
+                element={
+                  <Layout>
+                    <Dashboard />
                   </Layout>
                 }
               />

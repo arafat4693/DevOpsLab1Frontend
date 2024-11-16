@@ -1,79 +1,117 @@
 
 import { useEffect, useState } from 'react';
 import api from '@/lib/utils';
+import { CurrentUser } from '@/lib/types';
+import { useParams } from 'react-router-dom';
 
-interface Patient {
-  id: string;
-  address: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-  securityNumber: string;
-  familyName: string;
-  givenName: string;
-  telecom: string;
-  gender: string;
-  birthDate: string;
-  maritalStatus: string;
-  language: string;
+import {Table, TableBody, TableHead, TableHeader, TableRow, TableCell
+} from '@/components/ui/table';
+
+interface condition {
+  diagnosis: string
+  doctor: string;
+  date: string;
+}
+
+interface note {
+  note: string;
+  doctor: string;
+  date: string;
 }
 
 export default function Dashboard() {
-  const [patients, setPatients] = useState<Patient[]>([]);
+  const { id } = useParams();
+  const [condition, setCondition] = useState<condition[]>([]);
+  const [note, setNote] = useState<note[]>([]);
 
   useEffect(() => {
-    async function fetchPatients() {
+
+    const user = localStorage.getItem('user');
+    if (!user) {
+      return;
+    }
+    // if the user is a doctor or staff redirect to patients page
+    const role = (JSON.parse(user) as CurrentUser).role;
+    if (role === 'doctor' || role === 'staff') {
+      window.location.href = '/Patients';
+    }
+    let id2 = id;
+    if ( id === undefined) {
+      id2 = (JSON.parse(user) as CurrentUser).id.toString();
+    }
+    
+    async function fetchConditions() {
       try {
-        const response = await api.get('/journal/patients');
-        setPatients(response.data.patients);
+        if (!api.defaults.headers['Authorization']) {
+          return;
+        }
+        const response = await api.get('/journal/Conditions/' + id2);
+        setCondition(response.data.patients);
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+      }
+    }
+    
+    async function fetchNotes() {
+      try {
+        if (!api.defaults.headers['Authorization']) {
+          return;
+        }
+        const response = await api.get('/journal/Notes/' + id2);
+        setNote(response.data.patients);
       } catch (error) {
         console.error('Error fetching patients:', error);
       }
     }
 
-    fetchPatients();
+    fetchConditions();
+    fetchNotes();
   }, []);
 
   return (
+  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
     <div>
-      <h1>Dashboard</h1>
-      <table>
-        <thead>
-          <tr>
-            <th>Given Name</th>
-            <th>Family Name</th>
-            <th>Address</th>
-            <th>City</th>
-            <th>State</th>
-            <th>Postal Code</th>
-            <th>Country</th>
-            <th>Telecom</th>
-            <th>Gender</th>
-            <th>Birth Date</th>
-            <th>Marital Status</th>
-            <th>Language</th>
-          </tr>
-        </thead>
-        <tbody>
-          {patients.map((patient) => (
-            <tr key={patient.id}>
-              <td>{patient.givenName}</td>
-              <td>{patient.familyName}</td>
-              <td>{patient.address}</td>
-              <td>{patient.city}</td>
-              <td>{patient.state}</td>
-              <td>{patient.postalCode}</td>
-              <td>{patient.country}</td>
-              <td>{patient.telecom}</td>
-              <td>{patient.gender}</td>
-              <td>{new Date(patient.birthDate).toLocaleDateString()}</td>
-              <td>{patient.maritalStatus}</td>
-              <td>{patient.language}</td>
-            </tr>
+      <h2>Notes</h2>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Doctor</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Note</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {note.map((note, index) => (
+            <TableRow key={index + "note"}>
+              <TableCell>{note.doctor}</TableCell>
+              <TableCell>{note.date}</TableCell>
+              <TableCell>{note.note}</TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
+    <div>
+      <h2>Conditions</h2>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Diagnosis</TableHead>
+            <TableHead>Doctor</TableHead>
+            <TableHead>Date</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {condition.map((condition, index) => (
+            <TableRow key={index + "condition"}>
+              <TableCell>{condition.diagnosis}</TableCell>
+              <TableCell>{condition.doctor}</TableCell>
+              <TableCell>{condition.date}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  </div>
   );
 }
