@@ -30,11 +30,7 @@ export default function Dashboard() {
     if (!user) {
       return;
     }
-    // if the user is a doctor or staff redirect to patients page
-    const role = (JSON.parse(user) as CurrentUser).role;
-    if (role === 'doctor' || role === 'staff') {
-      window.location.href = '/Patients';
-    }
+    
     let id2 = id;
     if ( id === undefined) {
       id2 = (JSON.parse(user) as CurrentUser).id.toString();
