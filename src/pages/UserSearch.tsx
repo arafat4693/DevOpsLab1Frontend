@@ -67,7 +67,6 @@ export default function Dashboard() {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>ID</TableHead>
           <TableHead>Name</TableHead>
           <TableHead>Email</TableHead>
         </TableRow>
@@ -75,7 +74,7 @@ export default function Dashboard() {
       <TableBody>
         {patients.map((patient) => (
           <TableRow key={patient.id}>
-            <TableCell>{patient.name}</TableCell>
+            <TableCell><a href={`/${patient.id}`}>{patient.name}</a></TableCell>
             <TableCell>{patient.securityNumber}</TableCell>
           </TableRow>
         ))}
