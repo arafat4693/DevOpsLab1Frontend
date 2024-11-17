@@ -1,15 +1,16 @@
 import { CurrentUser } from '@/lib/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function MainNav() {
   const [role, setRole] = useState<string | null>(null);
   // get user role from local storage
+  useEffect(() => {
   const storedUser = localStorage.getItem('user');
   if (storedUser) {
     const user = JSON.parse(storedUser) as CurrentUser;
     setRole(user.role);
-  }
+  }}, []);
 
   return (
     <nav className="flex items-center mx-8 space-x-4 lg:space-x-6">
