@@ -27,3 +27,21 @@ export interface IRecipientResponse {
   name: string;
   role: string;
 }
+
+export interface IPatientProfile {
+  id: number;
+  account: Omit<CurrentUser, 'token'>;
+  conditions: ICondition[];
+  notes: INotes[];
+}
+
+export interface ICondition {
+  id: number;
+  name: string;
+  description: string;
+}
+
+export interface INotes {
+  id: number;
+  content: string;
+}

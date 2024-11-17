@@ -75,8 +75,6 @@ export default function PatientMessaging() {
     fetchRecipients();
   }, []);
 
-  console.log(messages);
-
   const selectedRecipient = form.watch('recipient'); // Övervaka recipient-fältet
 
   useEffect(() => {
