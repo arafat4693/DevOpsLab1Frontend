@@ -25,7 +25,7 @@ function App() {
             <Route path="/register/doctor" element={<RegisterDoctor />} />
             <Route element={<PrivateRoute />}>
               <Route
-                path="/Patients"
+                path="/patients"
                 element={
                   <Layout>
                     <UserSearch />
