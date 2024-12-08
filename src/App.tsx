@@ -13,6 +13,10 @@ import AuthProvider from './context/AuthProvider';
 import PrivateRoute from '@/components/PrivateRoute';
 import { UserSearch } from 'lucide-react';
 import Patient from './pages/Patient';
+import SearchPage from './pages/SearchPage';
+import InteractiveImageEditor from './pages/InteractiveImageEditor';
+import { ImageGallery } from './pages/ImageGallery';
+import EditImage from './pages/EditImage';
 
 function App() {
   return (
@@ -58,10 +62,42 @@ function App() {
                 }
               />
               <Route
+                path="/image/:id"
+                element={
+                  <Layout>
+                    <EditImage />
+                  </Layout>
+                }
+              />
+              <Route
                 path="/"
                 element={
                   <Layout>
                     <Dashboard />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/search"
+                element={
+                  <Layout>
+                    <SearchPage />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/new"
+                element={
+                  <Layout>
+                    <InteractiveImageEditor />
+                  </Layout>
+                }
+              />
+              <Route
+                path="/images"
+                element={
+                  <Layout>
+                    <ImageGallery />
                   </Layout>
                 }
               />

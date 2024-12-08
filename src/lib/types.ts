@@ -45,3 +45,12 @@ export interface INotes {
   id: number;
   content: string;
 }
+
+export interface IImage {
+  id: number;
+  cloudinaryPublicId: string;
+  imageUrl: string;
+  practitionerId: number;
+  updatedAt: string;
+  createdAt: string;
+}

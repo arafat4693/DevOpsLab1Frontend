@@ -8,7 +8,7 @@ export default function Dashboard() {
   const isLoggedIn = auth.userIsAuthenticated();
 
   if (!isLoggedIn) {
-    return <Navigate to="/" />;
+    return <Navigate to="/login" />;
   }
 
   return auth.user?.role === 'PATIENT' ? <PatientProfile /> : <Patients />;

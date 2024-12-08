@@ -16,6 +16,18 @@ export default function MainNav() {
       >
         Messages
       </Link>
+      <Link
+        to="/images"
+        className="text-sm font-medium transition-colors text-muted-foreground hover:text-primary"
+      >
+        Images
+      </Link>
+      <Link
+        to="/search"
+        className="text-sm font-medium transition-colors text-muted-foreground hover:text-primary"
+      >
+        Search
+      </Link>
     </nav>
   );
 }
