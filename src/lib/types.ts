@@ -54,3 +54,10 @@ export interface IImage {
   updatedAt: string;
   createdAt: string;
 }
+
+export type KeycloakUser = {
+  email: string;
+  firstName: string;
+  lastName: string;
+  roles: string[];
+};

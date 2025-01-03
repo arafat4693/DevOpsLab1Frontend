@@ -5,16 +5,23 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { IPatientProfile } from '@/lib/types';
 import api from '@/lib/utils';
+import { useKeycloak } from '@react-keycloak/web';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function PatientProfile() {
   const [patient, setPatient] = useState<IPatientProfile | null>(null);
+  const { keycloak } = useKeycloak();
 
   useEffect(() => {
     async function fetchPatient() {
       try {
-        const response = await api.get('/patients/me');
+        const token = keycloak.token;
+        const response = await api.get('/patients/me', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setPatient(response.data);
       } catch (error) {
         console.error('Error fetching patient:', error);
@@ -23,7 +30,7 @@ export default function PatientProfile() {
     }
 
     fetchPatient();
-  }, []);
+  }, [keycloak.token]);
 
   if (patient == null) return null;
 

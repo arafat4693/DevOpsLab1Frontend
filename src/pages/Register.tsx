@@ -23,6 +23,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import api from '@/lib/utils';
 import { useAuth } from '@/context/AuthProvider';
+import { useKeycloak } from '@react-keycloak/web';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -37,9 +38,10 @@ const formSchema = z.object({
 });
 
 export default function Register() {
-  const navigate = useNavigate();
   const auth = useAuth();
   const isLoggedIn = auth.userIsAuthenticated();
+  const navigate = useNavigate();
+  const { keycloak } = useKeycloak();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -58,6 +60,11 @@ export default function Register() {
         password: values.password,
         name: values.name,
       });
+
+      // keycloak.login({
+      //   redirectUri: 'http://localhost:5173/',
+      // });
+
       toast(response.data);
       navigate('/login', { replace: true });
     } catch (error) {

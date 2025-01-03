@@ -24,6 +24,7 @@ import { toast } from 'sonner';
 import api from '@/lib/utils';
 import { CurrentUser } from '@/lib/types';
 import { useAuth } from '@/context/AuthProvider';
+import { useKeycloak } from '@react-keycloak/web';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -37,6 +38,7 @@ export default function Login() {
   const auth = useAuth();
   const isLoggedIn = auth.userIsAuthenticated();
   const navigate = useNavigate();
+  const { keycloak } = useKeycloak();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,9 +62,13 @@ export default function Login() {
 
       auth.userLogin(authenticatedUser);
 
-      toast('Successfully logged in');
+      keycloak.login({
+        redirectUri: 'http://localhost:5173/',
+      });
 
-      navigate('/', { replace: true });
+      // toast('Successfully logged in');
+
+      // navigate('/', { replace: true });
     } catch (error) {
       console.log(error);
       toast('Invalid credentials');

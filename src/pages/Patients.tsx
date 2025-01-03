@@ -43,6 +43,7 @@ import api from '@/lib/utils';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthProvider';
+import { useKeycloak } from '@react-keycloak/web';
 
 // Zod schemas for form validation
 const noteSchema = z.object({
@@ -66,6 +67,7 @@ type DiagnosisFormValues = z.infer<typeof diagnosisSchema>;
 
 export default function Patients() {
   const auth = useAuth();
+  const { keycloak } = useKeycloak();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
@@ -76,7 +78,12 @@ export default function Patients() {
   useEffect(() => {
     async function fetchPatients() {
       try {
-        const response = await api.get('/patients/all');
+        const token = keycloak.token;
+        const response = await api.get('/patients/all', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setPatients(response.data);
       } catch (error) {
         console.error('Error fetching patients:', error);
@@ -85,7 +92,7 @@ export default function Patients() {
     }
 
     fetchPatients();
-  }, []);
+  }, [keycloak.token]);
 
   const noteForm = useForm<NoteFormValues>({
     resolver: zodResolver(noteSchema),
@@ -103,10 +110,19 @@ export default function Patients() {
     console.log('Note submitted:', data);
 
     try {
-      const response = await api.post('/notes/create', {
-        patientId: selectedPatient.id,
-        noteContent: data.note,
-      });
+      const token = keycloak.token;
+      const response = await api.post(
+        '/notes/create',
+        {
+          patientId: selectedPatient.id,
+          noteContent: data.note,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       toast.success(response.data);
       setIsNoteModalOpen(false);
@@ -123,11 +139,20 @@ export default function Patients() {
     console.log('Diagnosis submitted:', data);
 
     try {
-      const response = await api.post('/conditions/create', {
-        patientId: selectedPatient.id,
-        diagnosisName: data.name,
-        diagnosisDesc: data.description,
-      });
+      const token = keycloak.token;
+      const response = await api.post(
+        '/conditions/create',
+        {
+          patientId: selectedPatient.id,
+          diagnosisName: data.name,
+          diagnosisDesc: data.description,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       toast.success(response.data);
       setIsDiagnosisModalOpen(false);

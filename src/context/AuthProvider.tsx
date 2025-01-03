@@ -11,7 +11,7 @@ export default function AuthProvider({ children }: { children: JSX.Element }) {
     setUser(
       storedUser == null ? null : (JSON.parse(storedUser) as CurrentUser)
     );
-  }, []);
+  }, [setUser]);
 
   function getUser() {
     const storedUser = localStorage.getItem('user');

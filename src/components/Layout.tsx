@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import ModeToggle from './ModeToggle';
 import { useAuth } from '@/context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
 
 interface Props {
   children: JSX.Element;
@@ -11,10 +12,12 @@ interface Props {
 export default function Layout({ children }: Props) {
   const auth = useAuth();
   const navigate = useNavigate();
+  const { keycloak } = useKeycloak();
 
   function handleLogOut() {
     auth.userLogout();
-    navigate('/login', { replace: true });
+    keycloak.logout();
+    // navigate('/login', { replace: true });
   }
 
   return (

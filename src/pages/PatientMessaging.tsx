@@ -33,6 +33,7 @@ import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthProvider';
 import api from '@/lib/utils';
 import { IMessageResponse, IRecipientResponse } from '@/lib/types';
+import { useKeycloak } from '@react-keycloak/web';
 
 const FormSchema = z.object({
   content: z
@@ -49,6 +50,7 @@ const FormSchema = z.object({
 
 export default function PatientMessaging() {
   const auth = useAuth();
+  const { keycloak } = useKeycloak();
 
   const [messages, setMessages] = useState<IMessageResponse[]>([]);
   const [recipients, setRecipients] = useState<IRecipientResponse[]>([]);
@@ -64,7 +66,12 @@ export default function PatientMessaging() {
   useEffect(() => {
     async function fetchRecipients() {
       try {
-        const response = await api.get('/accounts/recipients');
+        const token = keycloak.token;
+        const response = await api.get('/accounts/recipients', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setRecipients(response.data);
       } catch (error) {
         console.error('Error fetching recipients:', error);
@@ -73,7 +80,7 @@ export default function PatientMessaging() {
     }
 
     fetchRecipients();
-  }, []);
+  }, [keycloak.token]);
 
   const selectedRecipient = form.watch('recipient'); // Övervaka recipient-fältet
 
@@ -82,8 +89,14 @@ export default function PatientMessaging() {
       if (!selectedRecipient) return; // Kontrollera att mottagaren är vald
 
       try {
+        const token = keycloak.token;
         const response = await api.get(
-          `/messages/${auth.getUser()?.id}/conversation/${+selectedRecipient}`
+          `/messages/${auth.getUser()?.id}/conversation/${+selectedRecipient}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
         setMessages(response.data);
       } catch (error) {
@@ -93,7 +106,7 @@ export default function PatientMessaging() {
     }
 
     fetchMessages();
-  }, [auth, selectedRecipient]);
+  }, [auth, selectedRecipient, keycloak.token]);
 
   // const [messages] = useState([
   //   {
@@ -130,11 +143,20 @@ export default function PatientMessaging() {
   async function handleSendMessage(data: z.infer<typeof FormSchema>) {
     console.log(data);
     try {
-      const response = await api.post('/messages/send', {
-        senderId: auth.getUser()?.id ?? -1,
-        recipientId: +data.recipient,
-        message: data.content,
-      });
+      const token = keycloak.token;
+      const response = await api.post(
+        '/messages/send',
+        {
+          senderId: auth.getUser()?.id ?? -1,
+          recipientId: +data.recipient,
+          message: data.content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       // Update messages in real-time
       setMessages((prev) => [...prev, response.data]);

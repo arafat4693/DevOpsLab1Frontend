@@ -17,93 +17,97 @@ import SearchPage from './pages/SearchPage';
 import InteractiveImageEditor from './pages/InteractiveImageEditor';
 import { ImageGallery } from './pages/ImageGallery';
 import EditImage from './pages/EditImage';
+import { ReactKeycloakProvider } from '@react-keycloak/web';
+import { keycloak } from './lib/keycloakConfig';
 
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <AuthProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/register/staff" element={<RegisterStaff />} />
-            <Route path="/register/doctor" element={<RegisterDoctor />} />
-            <Route element={<PrivateRoute />}>
-              <Route
-                path="/patients"
-                element={
-                  <Layout>
-                    <UserSearch />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/patient-messaging"
-                element={
-                  <Layout>
-                    <PatientMessaging />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/staff-messaging"
-                element={
-                  <Layout>
-                    <StaffMessaging />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/patient/:id"
-                element={
-                  <Layout>
-                    <Patient />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/image/:id"
-                element={
-                  <Layout>
-                    <EditImage />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/"
-                element={
-                  <Layout>
-                    <Dashboard />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/search"
-                element={
-                  <Layout>
-                    <SearchPage />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/new"
-                element={
-                  <Layout>
-                    <InteractiveImageEditor />
-                  </Layout>
-                }
-              />
-              <Route
-                path="/images"
-                element={
-                  <Layout>
-                    <ImageGallery />
-                  </Layout>
-                }
-              />
-            </Route>
-          </Routes>
-        </Router>
+        <ReactKeycloakProvider authClient={keycloak}>
+          <Router>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/register/staff" element={<RegisterStaff />} />
+              <Route path="/register/doctor" element={<RegisterDoctor />} />
+              <Route element={<PrivateRoute />}>
+                <Route
+                  path="/patients"
+                  element={
+                    <Layout>
+                      <UserSearch />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/patient-messaging"
+                  element={
+                    <Layout>
+                      <PatientMessaging />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/staff-messaging"
+                  element={
+                    <Layout>
+                      <StaffMessaging />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/patient/:id"
+                  element={
+                    <Layout>
+                      <Patient />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/image/:id"
+                  element={
+                    <Layout>
+                      <EditImage />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/"
+                  element={
+                    <Layout>
+                      <Dashboard />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/search"
+                  element={
+                    <Layout>
+                      <SearchPage />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/new"
+                  element={
+                    <Layout>
+                      <InteractiveImageEditor />
+                    </Layout>
+                  }
+                />
+                <Route
+                  path="/images"
+                  element={
+                    <Layout>
+                      <ImageGallery />
+                    </Layout>
+                  }
+                />
+              </Route>
+            </Routes>
+          </Router>
+        </ReactKeycloakProvider>
       </AuthProvider>
       <Toaster />
     </ThemeProvider>

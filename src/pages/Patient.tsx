@@ -8,15 +8,22 @@ import api from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useParams } from 'react-router-dom';
+import { useKeycloak } from '@react-keycloak/web';
 
 export default function Patient() {
   const { id } = useParams();
   const [patient, setPatient] = useState<IPatientProfile | null>(null);
+  const { keycloak } = useKeycloak();
 
   useEffect(() => {
     async function fetchPatient() {
       try {
-        const response = await api.get(`/patients/single/${id}`);
+        const token = keycloak.token;
+        const response = await api.get(`/patients/single/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setPatient(response.data);
       } catch (error) {
         console.error('Error fetching patient:', error);
@@ -25,7 +32,7 @@ export default function Patient() {
     }
 
     fetchPatient();
-  }, [id]);
+  }, [id, keycloak.token]);
 
   if (patient == null) return null;
 
