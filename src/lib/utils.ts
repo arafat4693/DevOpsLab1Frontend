@@ -7,9 +7,13 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// const api = axios.create({
+//   baseURL: 'http://localhost:8080/api', // Din backend-URL
+//   // baseURL: 'http://127.0.0.1:63354/api', // Din backend-URL
+// });
+
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api', // Din backend-URL
-  // baseURL: 'http://127.0.0.1:63354/api', // Din backend-URL
+  baseURL: 'https://apigateway.app.cloud.cbh.kth.se/api', // Din backend-URL
 });
 
 // Lägg till token i Authorization-headern

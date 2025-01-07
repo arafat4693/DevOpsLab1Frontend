@@ -63,7 +63,7 @@ export default function Login() {
       auth.userLogin(authenticatedUser);
 
       keycloak.login({
-        redirectUri: 'http://localhost:5173/',
+        redirectUri: 'https://labfr.app.cloud.cbh.kth.se',
       });
 
       // toast('Successfully logged in');
